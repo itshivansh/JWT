@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace CategoryService.Service
 {
-    public class CategoryService:ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository repository;
         private string NotFoundText = "This category id not found";
@@ -19,8 +19,8 @@ namespace CategoryService.Service
 
         public Category CreateCategory(Category _category)
         {
-            var category = repository.GetAllCategoriesByUserId(_category.CreatedBy).Where(c=>c.Name==_category.Name).FirstOrDefault();
-            if(category==null)
+            var category = repository.GetAllCategoriesByUserId(_category.CreatedBy).Where(c => c.Name == _category.Name).FirstOrDefault();
+            if (category == null)
             {
                 return repository.CreateCategory(_category);
             }
@@ -32,7 +32,7 @@ namespace CategoryService.Service
 
         public bool DeleteCategory(int categoryId)
         {
-            var deleteResult= repository.DeleteCategory(categoryId);
+            var deleteResult = repository.DeleteCategory(categoryId);
             if (deleteResult == false)
             {
                 throw new CategoryNotFoundException(this.NotFoundText);
@@ -47,7 +47,7 @@ namespace CategoryService.Service
 
         public Category GetCategoryById(int categoryId)
         {
-           var category=this.GetCategory(categoryId);
+            var category = this.GetCategory(categoryId);
             if (category != null)
             {
                 return category;

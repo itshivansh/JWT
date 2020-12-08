@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CategoryService.API.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     public class CategoryController : Controller
     {
@@ -69,7 +70,7 @@ namespace CategoryService.API.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromBody]Category value)
+        public IActionResult Post([FromBody] Category value)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace CategoryService.API.Controllers
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]Category value)
+        public IActionResult Put(int id, [FromBody] Category value)
         {
             try
             {

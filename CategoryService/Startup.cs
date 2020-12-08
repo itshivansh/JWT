@@ -25,6 +25,7 @@ namespace CategoryService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // this.ValidateToken(Configuration, services);
             services.AddScoped<CategoryContext>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, Service.CategoryService>();
@@ -39,7 +40,36 @@ namespace CategoryService
             {
                 app.UseDeveloperExceptionPage();
             }
+            //app.UseAuthentication();
             app.UseMvc();
+        }
+
+        private void ValidateToken(IConfiguration configuration, IServiceCollection services)
+        {
+            var audienceconfig = configuration.GetSection("Audience");
+            var secretkey = audienceconfig["key"];
+            var keybyteArray = Encoding.ASCII.GetBytes(secretkey);
+            var signature = new SymmetricSecurityKey(keybyteArray);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signature,
+
+                ValidateIssuer = true,
+                ValidIssuer = audienceconfig["Iss"],
+
+                ValidateAudience = true,
+                ValidAudience = audienceconfig["Aud"],
+
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o => { o.TokenValidationParameters = tokenValidationParameters; });
         }
     }
 }
